@@ -30,7 +30,7 @@ class MainViewModel(
     }
 
     private fun initBridgeList() {
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(mainDispatcher).launch {
             val bridgeList = brideManager.getBridgeList()
             bridgeIp = bridgeList.first().internalIpAddress
 
@@ -77,9 +77,9 @@ class MainViewModel(
         }
     }
 
-    fun setLightBla(light: Light) {
+    fun setLightBrightness(light: Light, brightness: Int) {
         viewModelScope.launch(mainDispatcher) {
-            lightController.changeHSVColor(token, light.id, 60, 100, light.state.hue)
+            lightController.changeHSVColor(token, light.id, brightness, 100, light.state.hue)
         }
     }
 
