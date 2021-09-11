@@ -16,24 +16,30 @@
 
 package com.loanaalbisser.philipshueAlarm
 
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.loanaalbisser.philipshueAlarm.addAlarm.AddAlarmScreen
+import com.loanaalbisser.philipshueAlarm.addAlarm.AddAlarmViewModel
 
 
+@ExperimentalMaterialApi
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
+    val lightRepository = LightRepository()
+    val mainViewModel: MainViewModel by lazy { MainViewModel(lightRepository) }
+    val addAlarmViewModel: AddAlarmViewModel by lazy { AddAlarmViewModel(lightRepository) }
 
     NavHost(navController, startDestination = Route.MAIN_SCREEN) {
         composable(route = Route.MAIN_SCREEN) {
-            val viewModel = MainViewModel()
-            MainScreen(navController, viewModel)
+
+            MainScreen(navController, mainViewModel)
         }
         composable(route = Route.ADD_ALARM_SCREEN) {
-            val viewModel = AddAlarmViewModel()
-            AddAlarmScreen(viewModel)
+            AddAlarmScreen(addAlarmViewModel)
         }
     }
 }

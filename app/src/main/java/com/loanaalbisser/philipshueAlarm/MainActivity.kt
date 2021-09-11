@@ -25,8 +25,9 @@ import com.loanaalbisser.philipshueAlarm.ui.theme.PhilipsHueAlarmTheme
 import kotlinx.coroutines.*
 
 class MainActivity : ComponentActivity() {
-    private val viewModel by lazy { MainViewModel() }
+    // private val viewModel by lazy { MainViewModel() }
 
+    @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

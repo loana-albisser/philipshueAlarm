@@ -8,12 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.loanaalbisser.philipshueAlarm.hue.BridgeController
 import com.loanaalbisser.philipshueAlarm.hue.Light
 import com.loanaalbisser.philipshueAlarm.hue.LinkButtonNotPressedException
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class MainViewModel(
+    val lightRepository: ILightRepository,
     val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : ViewModel() {
     private lateinit var token: String
@@ -61,6 +59,9 @@ class MainViewModel(
                 }*/
                 token = "2EM4xuxzuac9ejxILOYi8f4E2ieESILBmJC2aRr5"
                 _lights.value = lightController.getLights(token).filter { light -> light.state.reachable }
+                if (_lights.value != null) {
+                    lightRepository.setLights(_lights.value!!)
+                }
 
             } catch (exception: Exception) {
                 exception.printStackTrace()
@@ -69,7 +70,18 @@ class MainViewModel(
         }
     }
 
-    fun switchLightState(light: Light, on: Boolean) {
+    fun onLightStateChanged(light: Light, on: Boolean) {
+        switchLightState(light, on)
+        if (on) {
+            setLightBrightness(light, 100)
+            viewModelScope.launch {
+                delay(1000)
+                setLightBrightness(light, 60)
+            }
+        }
+    }
+
+    private fun switchLightState(light: Light, on: Boolean) {
         if (on) {
             turnOnLight(light)
         } else {
@@ -77,7 +89,7 @@ class MainViewModel(
         }
     }
 
-    fun setLightBrightness(light: Light, brightness: Int) {
+    private fun setLightBrightness(light: Light, brightness: Int) {
         viewModelScope.launch(mainDispatcher) {
             lightController.changeHSVColor(token, light.id, brightness, 100, light.state.hue)
         }
