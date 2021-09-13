@@ -1,23 +1,24 @@
 package com.loanaalbisser.philipshueAlarm
 
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.loanaalbisser.philipshueAlarm.hue.Light
 
 @Composable
 fun MainScreen(navController: NavController, viewModel: MainViewModel) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val test = navBackStackEntry
     Scaffold(
-        topBar = {/**/ },
+        topBar = { /**/ },
         drawerContent = {/**/ },
         bottomBar = {/**/ },
-        floatingActionButton = { addAlarmFabButton(navController) },
+        floatingActionButton = { AddAlarmFabButton(navController) },
         snackbarHost = {/**/ },
         content = {
             MainLightList(viewModel)
@@ -30,8 +31,10 @@ fun MainLightList(viewModel: MainViewModel) {
     LightsList(lights, onCheckedChange = viewModel::onLightStateChanged)
 }
 
+
+
 @Composable
-fun addAlarmFabButton(navController: NavController) {
+fun AddAlarmFabButton(navController: NavController) {
     val onClick = {
         navController.navigate(Route.ADD_ALARM_SCREEN)
     }
@@ -39,4 +42,5 @@ fun addAlarmFabButton(navController: NavController) {
         Icon(Icons.Filled.Add, "Add")
     }
 }
+
 

@@ -3,25 +3,71 @@ package com.loanaalbisser.philipshueAlarm.addAlarm
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.AlignmentLine
+import androidx.compose.ui.layout.HorizontalAlignmentLine
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.loanaalbisser.philipshueAlarm.AddAlarmFabButton
 import com.loanaalbisser.philipshueAlarm.LightsList
+import com.loanaalbisser.philipshueAlarm.MainLightList
 
 @ExperimentalMaterialApi
 @Composable
 fun AddAlarmScreen(viewModel: AddAlarmViewModel = viewModel()) {
+    Scaffold(
+        topBar = {
+            AppBar()
+        },
+        drawerContent = {/**/ },
+        bottomBar = {/**/ },
+        snackbarHost = {/**/ },
+        content = {
+            AddAlarmContent(viewModel = viewModel)
+        })
+}
+
+@Composable
+fun AppBar() {
+    TopAppBar(
+        title = { },
+        navigationIcon = {
+            IconButton(onClick = { /* doSomething() */ }) {
+                Icon(Icons.Filled.Close, contentDescription = null)
+            }
+        },
+        actions = {
+            // RowScope here, so these icons will be placed horizontally
+            IconButton(onClick = { /* doSomething() */ }) {
+                Icon(Icons.Filled.Check, contentDescription = "Localized description")
+            }
+        }
+    )
+}
+
+@ExperimentalMaterialApi
+@Composable
+fun AddAlarmContent(viewModel: AddAlarmViewModel) {
     Column(modifier = Modifier.padding(8.dp)) {
+        TimeComponent()
         LightList(viewModel = viewModel)
-        BrightnessComponent("Start Brightness")
-        BrightnessComponent("End Brightness")
+        BrightnessComponent()
         WeekdayListComponent()
     }
 }
+
+
 
 @Composable
 fun LightList(viewModel: AddAlarmViewModel) {
@@ -35,15 +81,62 @@ fun LightList(viewModel: AddAlarmViewModel) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
+            Title("Lamps")
             val lights = viewModel.getLights()
             LightsList(lights, onCheckedChange = viewModel::onLightStateChanged)
         }
     }
 }
 
+@Preview()
+@Composable
+fun TimeComponent() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentSize(Alignment.Center)
+            .padding(16.dp)
+            .clickable { },
+        elevation = 10.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Title("Time")
+            Row(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .wrapContentSize(Alignment.Center)
+            ) {
+                TimeInput()
+                Column(modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .wrapContentSize(Alignment.Center)
+                    .padding(16.dp)) {
+                    Text(text = ":")
+                }
+                TimeInput()
+            }
+        }
+
+    }
+}
+
+@Composable
+fun TimeInput() {
+    val textState = remember { mutableStateOf(TextFieldValue()) }
+    TextField(
+        modifier = Modifier.width(50.dp),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        value = textState.value,
+        onValueChange = { textState.value = it }
+    )
+}
+
 @ExperimentalMaterialApi
 @Composable
-fun BrightnessComponent(title: String) {
+fun BrightnessComponent() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -54,7 +147,7 @@ fun BrightnessComponent(title: String) {
         Column(
             modifier = Modifier.padding(15.dp)
         ) {
-            Title(title)
+            Title("Brightness")
             BrightnessSlider()
         }
     }
@@ -72,7 +165,7 @@ fun Title(title: String) {
 @Composable
 fun BrightnessSlider() {
     var sliderPosition by remember { mutableStateOf(0f..100f) }
-    Text(text = sliderPosition.toString())
+    // Text(text = sliderPosition.toString())
     RangeSlider(
         // steps = 5,
         values = sliderPosition,

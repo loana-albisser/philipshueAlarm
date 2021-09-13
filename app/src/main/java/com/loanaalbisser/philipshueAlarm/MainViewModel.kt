@@ -30,9 +30,11 @@ class MainViewModel(
     private fun initBridgeList() {
         CoroutineScope(mainDispatcher).launch {
             val bridgeList = brideManager.getBridgeList()
-            bridgeIp = bridgeList.first().internalIpAddress
+            if (bridgeList.isNotEmpty()) {
+                bridgeIp = bridgeList.first().internalIpAddress
 
-            fetchLightList()
+                fetchLightList()
+            }
         }
     }
 
