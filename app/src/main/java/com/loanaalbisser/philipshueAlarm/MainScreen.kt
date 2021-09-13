@@ -12,14 +12,8 @@ import com.loanaalbisser.philipshueAlarm.hue.Light
 
 @Composable
 fun MainScreen(navController: NavController, viewModel: MainViewModel) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val test = navBackStackEntry
     Scaffold(
-        topBar = { /**/ },
-        drawerContent = {/**/ },
-        bottomBar = {/**/ },
         floatingActionButton = { AddAlarmFabButton(navController) },
-        snackbarHost = {/**/ },
         content = {
             MainLightList(viewModel)
         })
@@ -30,8 +24,6 @@ fun MainLightList(viewModel: MainViewModel) {
     val lights: List<Light> by viewModel.lights.observeAsState(mutableListOf())
     LightsList(lights, onCheckedChange = viewModel::onLightStateChanged)
 }
-
-
 
 @Composable
 fun AddAlarmFabButton(navController: NavController) {

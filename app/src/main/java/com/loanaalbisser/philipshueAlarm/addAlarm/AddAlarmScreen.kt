@@ -19,37 +19,39 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.loanaalbisser.philipshueAlarm.AddAlarmFabButton
 import com.loanaalbisser.philipshueAlarm.LightsList
 import com.loanaalbisser.philipshueAlarm.MainLightList
 
 @ExperimentalMaterialApi
 @Composable
-fun AddAlarmScreen(viewModel: AddAlarmViewModel = viewModel()) {
+fun AddAlarmScreen(navController: NavController, viewModel: AddAlarmViewModel = viewModel()) {
     Scaffold(
         topBar = {
-            AppBar()
+            AppBar(navController)
         },
-        drawerContent = {/**/ },
-        bottomBar = {/**/ },
-        snackbarHost = {/**/ },
         content = {
             AddAlarmContent(viewModel = viewModel)
         })
 }
 
 @Composable
-fun AppBar() {
+fun AppBar(navController: NavController) {
     TopAppBar(
         title = { },
         navigationIcon = {
-            IconButton(onClick = { /* doSomething() */ }) {
+            IconButton(onClick = {
+                navController.popBackStack()
+            }) {
                 Icon(Icons.Filled.Close, contentDescription = null)
             }
         },
         actions = {
-            // RowScope here, so these icons will be placed horizontally
-            IconButton(onClick = { /* doSomething() */ }) {
+            IconButton(onClick = {
+                navController.popBackStack()
+                /* doSomething() */ }
+            ) {
                 Icon(Icons.Filled.Check, contentDescription = "Localized description")
             }
         }
@@ -135,6 +137,7 @@ fun TimeInput() {
 }
 
 @ExperimentalMaterialApi
+@Preview
 @Composable
 fun BrightnessComponent() {
     Card(
@@ -148,7 +151,16 @@ fun BrightnessComponent() {
             modifier = Modifier.padding(15.dp)
         ) {
             Title("Brightness")
-            BrightnessSlider()
+            Row(Modifier.fillMaxWidth()
+                .align(Alignment.CenterHorizontally),
+            verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    modifier = Modifier.wrapContentWidth(Alignment.CenterHorizontally)
+                        .padding(0.dp,0.dp,8.dp, 0.dp),
+                    text = "Start")
+                BrightnessSlider()
+                Text(modifier = Modifier.wrapContentWidth(), text = "End")
+            }
         }
     }
 }
@@ -156,8 +168,9 @@ fun BrightnessComponent() {
 @Composable
 fun Title(title: String) {
     Text(
-        color = Color.White,
-        text = title)
+        // color = Color.White,
+        text = title,
+    modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp))
 }
 
 
@@ -178,7 +191,7 @@ fun BrightnessSlider() {
         colors = SliderDefaults.colors(
             thumbColor = MaterialTheme.colors.secondary,
             activeTrackColor = MaterialTheme.colors.secondary
-        )
+        ),
     )
 }
 

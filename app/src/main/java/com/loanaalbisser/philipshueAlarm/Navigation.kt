@@ -35,11 +35,10 @@ fun Navigation() {
 
     NavHost(navController, startDestination = Route.MAIN_SCREEN) {
         composable(route = Route.MAIN_SCREEN) {
-
             MainScreen(navController, mainViewModel)
         }
         composable(route = Route.ADD_ALARM_SCREEN) {
-            AddAlarmScreen(addAlarmViewModel)
+            AddAlarmScreen(navController, addAlarmViewModel)
         }
     }
 }
